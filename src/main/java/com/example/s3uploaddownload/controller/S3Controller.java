@@ -5,6 +5,7 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,14 @@ import java.util.Date;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 public class S3Controller {
     private static final Logger log = LoggerFactory.getLogger(S3Controller.class);
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    @Autowired
-    private AmazonS3 s3Client;
+    private final AmazonS3 s3Client;
 
     @PostMapping("/upload")
     public String uploadToAWS(MultipartFile file) {
