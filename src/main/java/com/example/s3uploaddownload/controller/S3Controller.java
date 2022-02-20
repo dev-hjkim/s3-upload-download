@@ -1,17 +1,31 @@
 package com.example.s3uploaddownload.controller;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -46,6 +60,51 @@ public class S3Controller {
         }
 
         return "";
+    }
+
+    @GetMapping("/display")
+    @ResponseBody
+    public String getFileURL(String fileName) {
+        System.out.println("넘어오는 파일명 : "+fileName);
+
+        // set expiration
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60; // 1 hour
+        expiration.setTime(expTimeMillis);
+
+        // Generate the presigned URL.
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucketName, (fileName).replace(File.separatorChar, '/'))
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration);
+
+        return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
+    }
+
+
+    @GetMapping("/download")
+    @ResponseBody
+    public ResponseEntity<byte[]> getFile(String fileName){
+        log.info("fileName: "+ fileName);
+        ResponseEntity<byte[]> result = null;
+        try {
+            HttpHeaders header = new HttpHeaders();
+
+            // read from S3
+            URL url = new URL(getFileURL(fileName));
+            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            InputStream fileIS = urlConn.getInputStream();
+
+            // MIME regardless of extention
+            header.add("Content-Type", URLConnection.guessContentTypeFromStream(fileIS));
+
+            result = new ResponseEntity<>(IOUtils.toByteArray(fileIS), header, HttpStatus.OK);
+
+        } catch(IOException e) {
+            log.info("wrong file path");
+        }
+        return result;
     }
 
 }
