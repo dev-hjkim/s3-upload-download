@@ -18,6 +18,7 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.11.339'
     implementation 'com.amazonaws:aws-encryption-sdk-java:1.6.0'
     implementation 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
