@@ -39,7 +39,7 @@ public class S3Controller {
 
     @PostMapping("/upload")
     public String uploadToAWS(MultipartFile file) {
-        String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String key = UUID.randomUUID() + "/" + file.getOriginalFilename();
         try {
 
             ObjectMetadata metadata = new ObjectMetadata();
