@@ -32,6 +32,7 @@ class S3ControllerTest {
         }
 
         try {
+            assert file != null;
             mvc.perform(multipart("/upload")
                     .file(file))
                     .andExpect(status().isOk());
