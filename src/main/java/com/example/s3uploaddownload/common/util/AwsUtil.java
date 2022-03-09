@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ public class AwsUtil {
 
     private final AmazonS3 s3Client;
 
+    @Async
     public List<String> uploadImage(PostDto dto) {
         List<String> links = new ArrayList<>();
         int attachSeq = 1;
