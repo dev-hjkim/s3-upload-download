@@ -72,13 +72,23 @@ public class S3Controller {
         expTimeMillis += 1000 * 60 * 60; // 1 hour
         expiration.setTime(expTimeMillis);
 
-        // Generate the presigned URL.
-        GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucketName, (fileName).replace(File.separatorChar, '/'))
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration);
+        GetObjectMetadataRequest request = new GetObjectMetadataRequest(bucketName, fileName);
+        try {
+            ObjectMetadata objectMetadata = s3Client.getObjectMetadata(request);
+            // Generate the presigned URL.
+            GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                    new GeneratePresignedUrlRequest(bucketName, (fileName).replace(File.separatorChar, '/'))
+                            .withMethod(HttpMethod.GET)
+                            .withExpiration(expiration);
 
-        return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
+            return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
+        } catch (AmazonS3Exception ex) {
+            log.error("getLinkFromAWS AmazonS3Exception error = {}", ex.getMessage());
+        }
+
+        return "File Not Found";
+
+
     }
 
 
