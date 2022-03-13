@@ -4,12 +4,21 @@
 <mapper namespace="com.example.s3uploaddownload.mapper.PostMapper">
 
     <insert id="savePost" parameterType="com.example.s3uploaddownload.dto.PostDto">
-        INSERT INTO post
+        INSERT INTO posts
             (title, reg_id, reg_dtm)
         VALUES
             (#{title}, #{writer}, now())
         <selectKey keyProperty="seq" resultType="String" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
+    </insert>
+
+    <insert id="saveLinks" parameterType="com.example.s3uploaddownload.dto.PostDto">
+        INSERT INTO attachments
+        (post_seq, link, reg_id, reg_dtm)
+        VALUES
+        <foreach item="link" collection="links" separator=",">
+            (#{seq}, #{link}, #{writer}, now())
+        </foreach>
     </insert>
 </mapper>

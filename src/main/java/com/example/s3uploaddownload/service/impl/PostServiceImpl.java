@@ -15,4 +15,9 @@ public class PostServiceImpl implements PostService {
     public int savePost(PostDto dto) {
         return postMapper.savePost(dto);
     }
+
+    @Override
+    public int saveLinks(PostDto dto) {
+        return postMapper.saveLinks(dto);
+    }
 }

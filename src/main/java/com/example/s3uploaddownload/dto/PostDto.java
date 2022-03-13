@@ -25,4 +25,7 @@ public class PostDto {
     @Size(max=3, min=3)
     private List<MultipartFile> attachments;
 
+    @Setter
+    private List<String> links;
+
 }

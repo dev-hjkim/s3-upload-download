@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PostMapper {
     int savePost(PostDto dto);
+
+    int saveLinks(PostDto dto);
 }
