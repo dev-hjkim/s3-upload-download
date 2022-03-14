@@ -21,4 +21,16 @@
             (#{seq}, #{link}, #{writer}, now())
         </foreach>
     </insert>
+
+    <select id="selectPost" parameterType="String" resultType="com.example.s3uploaddownload.dto.PostDto">
+        SELECT seq, title, reg_id as writer
+        FROM posts
+        WHERE seq = #{seq}
+    </select>
+
+    <select id="selectLinks" parameterType="String" resultType="String">
+        SELECT link
+        FROM attachments
+        WHERE post_seq = #{seq}
+    </select>
 </mapper>

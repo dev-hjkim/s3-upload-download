@@ -20,4 +20,11 @@ public class PostServiceImpl implements PostService {
     public int saveLinks(PostDto dto) {
         return postMapper.saveLinks(dto);
     }
+
+    @Override
+    public PostDto selectPost(String seq) {
+        PostDto res = postMapper.selectPost(seq);
+        res.setLinks(postMapper.selectLinks(seq));
+        return res;
+    }
 }

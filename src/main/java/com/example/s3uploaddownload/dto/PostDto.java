@@ -11,11 +11,9 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
+@Setter
 @ToString
 public class PostDto {
-    @Setter
-    private String seq;
-
     @NotEmpty
     private String title;
 
@@ -25,7 +23,7 @@ public class PostDto {
     @Size(max=3, min=3)
     private List<MultipartFile> attachments;
 
-    @Setter
-    private List<String> links;
+    private String seq;
 
+    private List<String> links;
 }
